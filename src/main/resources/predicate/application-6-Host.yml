@@ -1,0 +1,33 @@
+server:
+  port: 8040
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      discovery:
+        locator:
+          # 让 gateway 通过服务发现组件找到其他的微服务
+          enabled: true
+      routes:
+        - id: host_route
+          uri: lb://user-center
+          predicates:
+            # 当且仅当名为 Host 的 Header 符合 **.somehost.org 或 **.anotherhost.org 时，才会转发用户微服务
+            # 如 Host 满足条件，则访问 http://localhost:8040/** -> user-center/**
+            # eg. 访问 http://localhost:8040/users/1 -> user-center/users/1
+            - Host=**.somehost.org,**.anotherhost.org
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
