@@ -20,6 +20,9 @@ spring:
             # 因此，访问 localhost:8040/** -> user-center/**
             # eg. 访问 http://localhost:8040/users/1 -> user-center/users/1
             - TimeBetween=上午9:00, 下午5:00
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar
+
 management:
   endpoints:
     web:
